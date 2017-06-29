@@ -1,0 +1,21 @@
+contract icb{
+address public owner;
+address public ico_contract;
+public int status;
+
+function icb(address ico){
+ ico_contract=ico;
+ status=0;
+ }
+ 
+ function deposit() returns (bool) payable{
+ 
+ }
+ 
+ function withdraw() returns (bool) payable{
+ 
+ }
+
+
+
+}
