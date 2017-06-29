@@ -43,7 +43,7 @@ function icb(address ico,address erc,uint max,uint perc){
  balance-=temp;
  if(!send(msg.sender,temp))throw;
  }
- if(status==1){ //se le icb è chiusa
+ if(status==2){ //se le icb è chiusa
  balance-=balances[msg.sender];
  balances[msg.sender]=0;
  if(!erc.transfer(msg.sender,balances[msg.sender]*rate))throw;
@@ -51,11 +51,16 @@ function icb(address ico,address erc,uint max,uint perc){
  }
  }
  
+ function closebox(){
+ if(owner!=msg.sender)throw;
+ status=1;
+ }
+ 
 
  function shoot(string str){
- if(!ic.deposit(balance))throw;
-  IC ic= IC(ic_contract);
-  ic.call.value(balance).gas(1500)(bytes4(sha3(str))); //calls the requested function at the ic contract
+ if(status!=1)throw;
+ if(!ic_contract.call.value(balance).gas(1500)(bytes4(sha3(str)));)throw;
+ status=2;
  }
  
  function kill(){}
