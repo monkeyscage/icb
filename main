@@ -30,6 +30,7 @@ function icb(address ico,address erc,uint max,uint perc){
  balances[msg.sender]+=maxcap-balance;
  balance=maxcap;
  rate=erc.balance[this]/balance;
+ if(rate*balance>erc.balance[this])rate-=1;
  status=1; //chiude la icb
  }
  }
