@@ -47,7 +47,7 @@ function icb(address ico,address erc,uint max,uint perc){
  balance-=balances[msg.sender];
  balances[msg.sender]=0;
  if(!erc.transfer(msg.sender,balances[msg.sender]*rate))throw;
- if(balance==0)kill();
+ if(balance<100000)kill();
  }
  }
  
