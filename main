@@ -1,19 +1,41 @@
 contract icb{
-address public owner;
-address public ico_contract;
-public int status;
+public address owner;
+public address ico_contract;
+public uint status;
+public uint maxcap;
+public mapping(address => uint)balances;
+public uint balance;
 
-function icb(address ico){
+function icb(address ico,uint max){
  ico_contract=ico;
  status=0;
+ maxcap=max;
  }
  
  function deposit() returns (bool) payable{
- 
+ if(status>0)throw;
+ if((balance+msg.value)<maxcap){ //se il deposito non eccede
+ balances[msg.sender]+=msg.value;
+ balance+=msg.value;
+ }else{ //caso in cui il deposito eccede il maxcap o uguaglia il maxcap
+ if((balance+msg.value)>maxcap){ //eccede , ne restituisce un po'
+ if(!send(msg.sender,msg.value-(maxcap-balance)))throw;
+ }
+ balances[msg.sender]+=maxcap-balance;
+ balance=maxcap;
+ status=1; //chiude la icb
+ }
  }
  
  function withdraw() returns (bool) payable{
- 
+ if(status==0){ //se la icb è aperta
+ uint temp=balances[msg.sender];
+ balances[msg.sender]=0;
+ balance-=temp;
+ if(!send(msg.sender,temp))throw;
+ }
+ if(status==1){ //se le icb è chiusa
+ }
  }
 
 
