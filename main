@@ -7,19 +7,22 @@ public uint maxcap;
 public mapping(address => uint)balances;
 public uint balance;
 public mapping(address => bool)done;
+public uint percentage;
 
-function icb(address ico,address erc,uint max){
+function icb(address ico,address erc,uint max,uint perc){
  ico_contract=ico;
  erc_contract=erc;
  status=0;
  maxcap=max;
+ percentage=perc;
  }
  
  function deposit() returns (bool) payable{
  if(status>0)throw;
  if(msg.value==0)throw;
  if((balance+msg.value)<maxcap){ //se il deposito non eccede
- balances[msg.sender]+=msg.value;
+ balances[msg.sender]+=msg.value-(msg.value/100*perc);
+ balances[owner]+=msg.value/100*perc;
  balance+=msg.value;
  }else{ //caso in cui il deposito eccede il maxcap o uguaglia il maxcap
  if((balance+msg.value)>maxcap){ //eccede , ne restituisce un po'
