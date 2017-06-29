@@ -33,15 +33,19 @@ function icb(address ico,address erc,uint max){
  }
  
  function withdraw() returns (bool) payable{
+ if(done[msg.sender])throw;
  if(status==0){ //se la icb è aperta
  uint temp=balances[msg.sender];
  balances[msg.sender]=0;
  balance-=temp;
  if(!send(msg.sender,temp))throw;
  }
- if(status==2){ //se le icb è chiusa
+ if(status==1){ //se le icb è chiusa
+ done[msg.sender]=true;
+ balance-=balances[msg.sender];
  balances[msg.sender]=0;
  if(!erc.transfer(msg.sender,balances[msg.sender]*rate))throw;
+ if(balance==0)kill();
  }
  }
  
@@ -51,5 +55,7 @@ function icb(address ico,address erc,uint max){
   IC ic= IC(ic_contract);
   ic.call.value(balance).gas(1500)(bytes4(sha3(str))); //calls the requested function at the ic contract
  }
+ 
+ function kill(){}
 
 }
