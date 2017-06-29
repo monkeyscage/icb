@@ -6,7 +6,6 @@ public uint status;
 public uint maxcap;
 public mapping(address => uint)balances;
 public uint balance;
-public mapping(address => bool)done;
 public uint percentage;
 
 function icb(address ico,address erc,uint max,uint perc){
@@ -36,7 +35,7 @@ function icb(address ico,address erc,uint max,uint perc){
  }
  
  function withdraw() returns (bool) payable{
- if(done[msg.sender])throw;
+ if(balances[msg.sender]==0)throw;
  if(status==0){ //se la icb è aperta
  uint temp=balances[msg.sender];
  balances[msg.sender]=0;
@@ -44,7 +43,6 @@ function icb(address ico,address erc,uint max,uint perc){
  if(!send(msg.sender,temp))throw;
  }
  if(status==1){ //se le icb è chiusa
- done[msg.sender]=true;
  balance-=balances[msg.sender];
  balances[msg.sender]=0;
  if(!erc.transfer(msg.sender,balances[msg.sender]*rate))throw;
